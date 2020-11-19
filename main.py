@@ -11,6 +11,8 @@ t = 0
 L1 = sim.model.geom_size[1]
 L2 = sim.model.geom_size[2]
 
+
+
 erro_anterior = 0
 tempo = 0
 erro_integracao = 0
