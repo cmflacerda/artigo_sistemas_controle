@@ -25,7 +25,7 @@ L2 = 0.063
 Izz1 = (1/12)*m1*(L1**2)
 Izz2 = (1/12)*m2*(L2**2)
 
-passo_theta = (5*pi)/180
+passo_theta = (1*pi)/180
 
 
 # ai is the distance from Zi-1 to Zi along Xi-1
@@ -89,8 +89,8 @@ passo_theta = (5*pi)/180
 def fowardkin(theta1, theta2):
 
     # 0T3
-    matriz_transformacao = [[math.cos(theta1+theta2 - pi/2), 0, math.sin(theta1+theta2 - pi/2), (math.cos(theta1)*2*L1 + math.sin(theta1+theta2 - pi/2)*2*L2)],
-          [math.sin(theta1-theta2 + pi/2), 0, math.cos(theta1+theta2 - pi/2), (math.sin(theta1)*2*L1 + math.cos(theta1-theta2 + pi/2)*2*L2)],
+    matriz_transformacao = [[np.cos(theta1+theta2 - pi/2), 0, np.sin(theta1+theta2 - pi/2), (np.cos(theta1)*2*L1 + np.sin(theta1+theta2 - pi/2)*2*L2)],
+          [np.sin(theta1-theta2 + pi/2), 0, np.cos(theta1+theta2 - pi/2), (np.sin(theta1)*2*L1 + np.cos(theta1-theta2 + pi/2)*2*L2)],
           [0, -1, 0, 0],
           [0, 0, 0, 1]]
 
@@ -133,7 +133,7 @@ def control_action(theta1, theta2, theta_virtual):
     Kp = kp * np.eye(3) #np.array([[kp, 0, 0],[],[]])
     Kv = kv * np.eye(3)
 
-    kj_junta_um = 15
+    kj_junta_um = 10
     kj_junta_dois = 10
     bj_junta_um = 5
     bj_junta_dois = 2
@@ -170,7 +170,9 @@ def control_action(theta1, theta2, theta_virtual):
     sim.data.ctrl[0] = T_a_juntas[0][0]
     sim.data.ctrl[1] = T_a_juntas[1][0]
 
-    print(f'{sim.data.sensordata[0]:.1f}')
+    #print(f'{sim.data.sensordata:.1f}')
+    print(sim.data.sensordata[:3])
+    print("")
 
 
 
