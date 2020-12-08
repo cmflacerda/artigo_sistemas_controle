@@ -9,6 +9,7 @@
     -->
 
     <statistic extent="2" meansize=".05"/>
+    <size njmax="600"/>
 
     <option timestep="0.005" solver="Newton" iterations="30" tolerance="1e-10" jacobian="sparse" cone="pyramidal"/>
 

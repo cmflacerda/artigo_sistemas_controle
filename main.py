@@ -5,7 +5,22 @@ import math
 from numpy import pi
 
 # model = load_model_from_path("./assets/two_link.xml")
-model = load_model_from_path("./assets/full_kuka_two_joints.xml")
+print("Escolha o corpo que sera submetido a analise: ")
+print("1 - corpo rigido")
+print("2 - corpo macio")
+menu = int(input("Escolha: "))
+
+while menu!=1 and menu!=2:
+    print("Valor incorreto")
+    print("1 - corpo rigido")
+    print("2 - corpo macio")
+    menu = int(input("Escolha: "))
+
+if menu == 1:
+    model = load_model_from_path("./assets/full_kuka_two_joints.xml")
+elif menu == 2:
+    model = load_model_from_path("./assets/full_kuka_two_joints_soft_body.xml")
+
 sim = MjSim(model)
 viewer = MjViewer(sim)
 t = 0
@@ -133,8 +148,8 @@ def control_action(theta1, theta2, theta_virtual):
     Kp = kp * np.eye(3) #np.array([[kp, 0, 0],[],[]])
     Kv = kv * np.eye(3)
 
-    kj_junta_um = 10
-    kj_junta_dois = 10
+    kj_junta_um = 100
+    kj_junta_dois = 40
     bj_junta_um = 5
     bj_junta_dois = 2
 
@@ -142,7 +157,10 @@ def control_action(theta1, theta2, theta_virtual):
     Bj = [[bj_junta_um, 0], [0, bj_junta_dois]]
 
     posicao_virtual = fowardkin(1.570796327, 0) # 1.570796327
-    posicao_virtual_juntas = [[theta_virtual], [-1.570796327]]
+    if theta_virtual < 2.4:
+        posicao_virtual_juntas = [[-theta_virtual], [1.570796327]]
+    elif theta_virtual >= 2.4:
+        posicao_virtual_juntas = [[-2.4], [1.570796327]]
     #print(posicao_virtual)
     velocidade_virtual = [[0], [0], [0]]
     velocidade_virtual_juntas = [[0], [0]]
@@ -170,8 +188,17 @@ def control_action(theta1, theta2, theta_virtual):
     sim.data.ctrl[0] = T_a_juntas[0][0]
     sim.data.ctrl[1] = T_a_juntas[1][0]
 
+    print(sim.data.ctrl)
+    print("")
+
     #print(f'{sim.data.sensordata:.1f}')
-    print(sim.data.sensordata[:3])
+    print("coordenada x global da forca: " + str(sim.data.sensordata[2]))
+    print("coordenada y global da forca: " + str(sim.data.sensordata[0]))
+    print("coordenada z global da forca: " + str(sim.data.sensordata[1]))
+    print("")
+    print("coordenada x global do torque: " + str(sim.data.sensordata[5]))
+    print("coordenada y global do torque: " + str(sim.data.sensordata[3]))
+    print("coordenada z global do torque: " + str(sim.data.sensordata[4]))
     print("")
 
 

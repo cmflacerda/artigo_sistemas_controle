@@ -6,7 +6,7 @@
   <option>
     <flag gravity="disable"/>
   </option>
-
+  <size nconmax="5000" njmax="10000" nstack="10000000"/>
   <default>
     <joint damping="0.5"/>
     <default class="visual">
@@ -21,6 +21,9 @@
   <asset>
     <include file="kuka/kuka_assets.xml"/>
     <texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2=".6 .8 1" width="256" height="256"/>
+    <texture name="texsponge" type="2d" file="sponge.png"/>
+
+    <material name="matsponge" texture="texsponge" specular="0.3"/>
   </asset>
 
   <worldbody>
@@ -28,11 +31,11 @@
     <geom class="collision" type="plane" size="10 10 1" rgba=".8 .8 .8 1"/>
     <body name="kuka_table" pos="0 0 1">
       <geom class="collision" type="box" size=".5 .6 .5" pos="0 0 -.5" />
-      <body name="impact_base" pos=".04 -0.4 0" euler="0 0 0.349">
+      <body name="impact_base" pos="-.1 -0.4 0">
         <geom class="collision" type="box" size=".1 0.2 .03" pos="0 0 0.03" rgba="0.5 0.5 0.5 1" />
-        <body name="impact_bar" pos="0 0 0">
+        <!--<body name="impact_bar" pos="0 0 0">
           <geom class="collision" type="box" size=".05 0.15 1" pos="0 0 0.03" rgba="0.5 0.5 0.5 1" />
-        </body>
+        </body>-->
       </body>
       <body name="kuka_base" pos=".2 0 0">
         <include file="kuka/kuka_mesh_collision_peg_ee_two_joints.xml"/>
@@ -44,6 +47,12 @@
         <include file="hole/polyhedral_hole_inner=0-0068_outer=0-05_height=0-05_num_facets=16.xml"/>
       </body>
     </body> -->
+    <body pos="0 -0.46 1.78">
+      <composite type="box" count="4 4 4" spacing="0.04">
+          <!--<skin texcoord="true" material="matsponge" rgba=".7 .7 .7 1"/>-->
+          <geom type="capsule" size=".015 0.05" rgba=".8 .2 .1 1"/>
+      </composite>
+    </body>
   </worldbody>
 
   <actuator>
