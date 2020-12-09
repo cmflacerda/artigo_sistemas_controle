@@ -21,6 +21,9 @@ if menu == 1:
 elif menu == 2:
     model = load_model_from_path("./assets/full_kuka_two_joints_soft_body.xml")
 
+file = open("dados_forca.txt", "a")
+
+
 sim = MjSim(model)
 viewer = MjViewer(sim)
 t = 0
@@ -201,6 +204,8 @@ def control_action(theta1, theta2, theta_virtual):
     print("coordenada z global do torque: " + str(sim.data.sensordata[4]))
     print("")
 
+    modulo_forca = np.sqrt(sim.data.sensordata[2]**2 + sim.data.sensordata[0]**2 + sim.data.sensordata[1]**2)
+    file.write(str(round(sim.data.sensordata[2],2)) + "  " + str(round(sim.data.sensordata[0],2)) + "  " + str(round(sim.data.sensordata[1],2)) + "  " + str(round(modulo_forca,2)) + "  " + str(sim.data.time) + "\n")
 
 
 try:
