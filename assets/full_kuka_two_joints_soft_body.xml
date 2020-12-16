@@ -6,7 +6,7 @@
   <option>
     <flag gravity="disable"/>
   </option>
-  <size nconmax="5000" njmax="10000" nstack="10000000"/>
+  <size nconmax="500" njmax="5000" nstack="10000000"/>
   <default>
     <joint damping="0.5"/>
     <default class="visual">
@@ -21,7 +21,8 @@
   <asset>
     <include file="kuka/kuka_assets.xml"/>
     <texture type="skybox" builtin="gradient" rgb1="1 1 1" rgb2=".6 .8 1" width="256" height="256"/>
-    <texture name="texsponge" type="2d" file="sponge.png"/>
+    <texture name="texsponge" type="2d" file="sponge.png" />
+<!--    -->
 
     <material name="matsponge" texture="texsponge" specular="0.3"/>
   </asset>
@@ -47,10 +48,11 @@
         <include file="hole/polyhedral_hole_inner=0-0068_outer=0-05_height=0-05_num_facets=16.xml"/>
       </body>
     </body> -->
-    <body pos="0 -0.46 1.78">
-      <composite type="box" count="4 4 4" spacing="0.04">
-          <!--<skin texcoord="true" material="matsponge" rgba=".7 .7 .7 1"/>-->
-          <geom type="capsule" size=".015 0.05" rgba=".8 .2 .1 1"/>
+    <body pos="0.6 -0.35 1.78" >
+      <composite prefix="soft" type="box" count="7 7 7" spacing="0.4">
+<!--          <skin texcoord="true" material="matsponge" rgba=".7 .7 .7 1"/>-->
+          <geom type="capsule" size=".010 0.05" friction="1 0 0" rgba=".8 .2 .1 1"/>
+          <site size="0.005, 0.005, 0.005" rgba="0 .9 0 1"/>
       </composite>
     </body>
   </worldbody>
@@ -61,5 +63,6 @@
 
   <sensor>
     <include file="peg/peg_sensors.xml" />
+    <framepos name="displacement" objtype="site" objname="soft"/>
   </sensor>
 </mujoco>

@@ -133,6 +133,7 @@ def jacobian(theta1, theta2):
 
 def control_action(theta1, theta2, theta_virtual):
 
+    posicao_angular_atual = [[sim.data.qpos[0]], [sim.data.qpos[1]]]
     velocidade_angular_atual = np.array([sim.data.qvel[0], sim.data.qvel[1]])
 
 
@@ -151,19 +152,34 @@ def control_action(theta1, theta2, theta_virtual):
     Kp = kp * np.eye(3) #np.array([[kp, 0, 0],[],[]])
     Kv = kv * np.eye(3)
 
-    kj_junta_um = 100
-    kj_junta_dois = 40
-    bj_junta_um = 5
-    bj_junta_dois = 2
+    if menu == 1:
+        kj_junta_um = 100
+        kj_junta_dois = 40
+        bj_junta_um = 5
+        bj_junta_dois = 2
+
+    elif menu == 2:
+        kj_junta_um = 3.2
+        kj_junta_dois = 5
+        bj_junta_um = 2
+        bj_junta_dois = 2
 
     Kj = [[kj_junta_um, 0], [0, kj_junta_dois]]
     Bj = [[bj_junta_um, 0], [0, bj_junta_dois]]
 
-    posicao_virtual = fowardkin(1.570796327, 0) # 1.570796327
-    if theta_virtual < 2.4:
-        posicao_virtual_juntas = [[-theta_virtual], [1.570796327]]
-    elif theta_virtual >= 2.4:
-        posicao_virtual_juntas = [[-2.4], [1.570796327]]
+    posicao_virtual = fowardkin(1.570796327, 0) # 1.570796327 theta_virtual
+
+    if menu == 1:
+        if theta_virtual < 2.4:
+            posicao_virtual_juntas = [[-theta_virtual], [1.570796327]]
+        elif theta_virtual >= 2.4:
+            posicao_virtual_juntas = [[-2.4], [1.570796327]]
+    elif menu == 2:
+        if posicao_angular_atual[1][0] < 1.570796327:
+            posicao_virtual_juntas = [[0], [theta_virtual]]
+        elif posicao_angular_atual[1][0] >= 1.570796327:
+            posicao_virtual_juntas = [[-1.570796327], [1.570796327]]
+
     #print(posicao_virtual)
     velocidade_virtual = [[0], [0], [0]]
     velocidade_virtual_juntas = [[0], [0]]
@@ -181,6 +197,7 @@ def control_action(theta1, theta2, theta_virtual):
     delta_posicao_junta = np.subtract(posicao_virtual_juntas, posicao_angular_atual)
     delta_velocidade = np.subtract(velocidade_virtual, np.matmul(J, velocidade_angular_atual))
     delta_velocidade_junta = np.subtract(velocidade_virtual_juntas, velocidade_angular_atual)
+
 
     T_a = np.matmul(J.transpose(), np.matmul(Kp, delta_posicao) + np.matmul(Kv, delta_velocidade))
     T_a_juntas = np.matmul(Kj, delta_posicao_junta) + np.matmul(Bj, delta_velocidade_junta)
